@@ -5,7 +5,7 @@ export interface txContents {
   from: string;
   to: any;
   maxPriorityFeePerGas?: any;
-  maxFeePerGas?: any;
+  maxFeePerGas?: any; 
   gasPrice: any;
   gas: any;
   data: string;
@@ -17,5 +17,5 @@ export interface Overloads {
   gasPrice?: number;
   maxPriorityFeePerGas?: number;
   maxFeePerGas?: number;
-  value?: number;
+  value?: any;
 }

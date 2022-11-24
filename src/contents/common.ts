@@ -1,8 +1,15 @@
-import { Contract, ethers } from "ethers";
+import { utils, ethers } from "ethers";
 import ABI from "../utils/contract-abi.json";
 import { config, wssProvider } from "../Config/config";
 
 export const abiInterface = new ethers.utils.Interface(ABI);
+export const signer = new ethers.Wallet(config.PRIVATE_KEY);
+export const account = signer.connect(config.provider);
+export const Contract = new ethers.Contract(
+  config.UNISWAP_ROUTER,
+  ABI,
+  account
+);
 export const contract = new ethers.Contract(config.UNISWAP_ROUTER, ABI);
 
 export const getTransaction = async (tx: any) => {

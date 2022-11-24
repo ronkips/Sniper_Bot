@@ -26,22 +26,22 @@ export const streamData = async () => {
           data: txReceipt.data
         };
         await dataProcessing(txContents);
-      } else {
-        await wait(3000);
-        let txReceipt: any = await getTransaction(tx);
-        if (txReceipt) {
-          const txContents: txContents = {
-            hash: txReceipt.hash,
-            from: txReceipt.from,
-            to: txReceipt.to,
-            maxPriorityFeePerGas: txReceipt.maxPriorityFeePerGas,
-            maxFeePerGas: txReceipt.gasPrice,
-            gas: txReceipt.gasLimit,
-            gasPrice: txReceipt.gasPrice,
-            data: txReceipt.data
-          };
-          await dataProcessing(txContents);
-        }
+      // } else {
+      //   await wait(3000);
+      //   let txReceipt: any = await getTransaction(tx);
+      //   if (txReceipt) {
+      //     const txContents: txContents = {
+      //       hash: txReceipt.hash,
+      //       from: txReceipt.from,
+      //       to: txReceipt.to,
+      //       maxPriorityFeePerGas: txReceipt.maxPriorityFeePerGas,
+      //       maxFeePerGas: txReceipt.gasPrice,
+      //       gas: txReceipt.gasLimit,
+      //       gasPrice: txReceipt.gasPrice,
+      //       data: txReceipt.data
+      //     };
+      //     await dataProcessing(txContents);
+      //   }
       }
     });
   } catch (error) {}
