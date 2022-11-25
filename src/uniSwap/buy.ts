@@ -1,12 +1,11 @@
-import { ethers, utils } from "ethers";
+import { ethers } from "ethers";
 import { walletAddress } from "../Config/config";
 import { Overloads } from "../contents/interface";
-import ABI from "../utils/contract-abi.json";
 import { Contract } from "../contents/common";
 
 //swapExactETHForTokens
 
-export const buy = async (  
+export const buyToken = async (  
   path: string[],
   overLoads: Overloads
 ) => {

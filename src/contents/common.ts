@@ -4,12 +4,15 @@ import { config, wssProvider } from "../Config/config";
 
 export const abiInterface = new ethers.utils.Interface(ABI);
 export const signer = new ethers.Wallet(config.PRIVATE_KEY);
-export const account = signer.connect(config.provider);
+export const account = signer.connect(wssProvider);
 export const Contract = new ethers.Contract(
   config.UNISWAP_ROUTER,
   ABI,
   account
 );
+export const abi = [
+  " function approve(address spender, uint value) external returns (bool)"
+];
 export const contract = new ethers.Contract(config.UNISWAP_ROUTER, ABI);
 
 export const getTransaction = async (tx: any) => {
@@ -30,6 +33,6 @@ export const getAmountOut = async (amountIn: number, path: string[]) => {
   }
 };
 
-export const wait = async (ms: number) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-};
+// export const wait = async (ms: number) => {
+//   return new Promise((resolve) => setTimeout(resolve, ms));
+// };

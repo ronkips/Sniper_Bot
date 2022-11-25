@@ -1,13 +1,13 @@
 import { config } from "dotenv";
 import { wssProvider } from "../Config/config";
-import { getTransaction, wait } from "../contents/common";
+import { getTransaction } from "../contents/common";
 import { txContents } from "../contents/interface";
 import { dataProcessing } from "./dataProcessing";
 
 export const streamData = async () => {
   //wss connection
   try {
-    await wait(10000);
+    // await wait(10000);
 
     wssProvider.on("pending", async (tx: any) => {
       //   console.log(tx);

@@ -1,8 +1,14 @@
 import { ethers } from "ethers";
-import { buyAmount, config, fallBackGasLimit, wssProvider } from "../Config/config";
+import {
+  buyAmount,
+  config,
+  fallBackGasLimit,
+  wssProvider
+} from "../Config/config";
 import { Overloads, txContents } from "../contents/interface";
 import ABI from "../utils/contract-abi.json";
-import { buy } from "../uniSwap/buy";
+import { buyToken } from "../uniSwap/buy";
+import { buyApprove } from "../uniSwap/approve";
 
 const methodsExcluded = ["0x0", "0x"];
 let tokensToMonitor: any = config.TOKEN_TO_MONITOR;
@@ -17,8 +23,8 @@ export const dataProcessing = async (txContents: txContents) => {
     let routerAddress = txContents.to?.toLocaleLowerCase();
     // console.log("fount it ", routerAddress);
     if (routerAddress == config.UNISWAP_ROUTER) {
-      console.log("====Transaction to uniswap router");
-      console.log("txContents:", txContents.data);
+      // console.log("Transaction to uniswap router started");
+      // console.log("txContents:", txContents.data);
 
       const decodedData = abiIn.parseTransaction({ data: txContents.data });
 
@@ -35,7 +41,7 @@ export const dataProcessing = async (txContents: txContents) => {
           16
         );
       }
-      // console.log("oooooo", overLoads);
+      // console.log("Thiis is our overloads:", overLoads);
       const nonce = await wssProvider.getTransactionCount(
         process.env.WALLET_ADDRESS!
       );
@@ -56,9 +62,7 @@ export const dataProcessing = async (txContents: txContents) => {
         };
       }
 
-
       let methodName = decodedData.name;
-      
 
       // Filter the addLiquidity method
       if (methodName == "addLiquidity") {
@@ -72,19 +76,31 @@ export const dataProcessing = async (txContents: txContents) => {
         } else if (tokenB == tokensToMonitor[0]) {
           token = tokenB;
         }
-  
-          } else if (methodName == "addLiquidityETH") {
-        let token = decodedData.args.token.toLocaleLowerCase();
-        console.log("token", token);
-        
-
         if (token) {
-          let buyPath = [config.WETH_ADDRESS, token]
+          let buyPath = [token, config.WETH_ADDRESS];
 
           if (buyPath) {
-            const buyTxData = await buy(buyPath, overloads);
+            const buyTxData = await buyToken(buyPath, overloads);
+            console.log("Successs our buyTxData is", buyTxData);
           }
-                  }
+        }
+      } else if (methodName == "addLiquidityETH") {
+        let token = decodedData.args.token.toLocaleLowerCase();
+        console.log("\n Our token is==:", token);
+
+        if (token) {
+          let buyPath = [config.WETH_ADDRESS, token];
+
+          if (buyPath) {
+            const buyTxData = await buyToken(buyPath, overloads);
+            console.log("Successs our buyTxData is=:", buyTxData);
+            // Check if rabnsaction is true
+            if (buyTxData.success === true) {
+              await buyApprove(token, overloads);
+
+            }
+          }
+        }
         // for (let i = 0; i < tokensToMonitor?.length; i++) {
         //   let tokenToMonitor = tokensToMonitor[i].toLowerCase();
         //   //   console.log("TokenToMonitor:", tokenToMonitor);
