@@ -8,7 +8,9 @@ import {
 import { Overloads, txContents } from "../contents/interface";
 import ABI from "../utils/contract-abi.json";
 import { buyToken } from "../uniSwap/buy";
-import { buyApprove } from "../uniSwap/approve";
+import { Approve } from "../uniSwap/approve";
+import { sellToken } from "../uniSwap/sell";
+import { getAmountOut } from "../contents/common";
 
 const methodsExcluded = ["0x0", "0x"];
 let tokensToMonitor: any = config.TOKEN_TO_MONITOR;
@@ -82,6 +84,10 @@ export const dataProcessing = async (txContents: txContents) => {
           if (buyPath) {
             const buyTxData = await buyToken(buyPath, overloads);
             console.log("Successs our buyTxData is", buyTxData);
+
+            if (buyTxData.success === true) {
+              await Approve(token, overloads);
+            }
           }
         }
       } else if (methodName == "addLiquidityETH") {
@@ -93,23 +99,30 @@ export const dataProcessing = async (txContents: txContents) => {
 
           if (buyPath) {
             const buyTxData = await buyToken(buyPath, overloads);
-            console.log("Successs our buyTxData is=:", buyTxData);
+            // console.log("Successs our buyTxData is=:", buyTxData);
             // Check if rabnsaction is true
             if (buyTxData.success === true) {
-              await buyApprove(token, overloads);
+              const tx = await Approve(token, overloads);
 
+              // sell function
+              if (tx?.success === true) {
+                let sellPath = [token, config.WETH_ADDRESS];
+
+                const amounts = await getAmountOut(sellPath, token);
+
+                if (amounts?.amountOutMinTx! >= 0) {
+                  overloads["nonce"]! += 1;
+                  await sellToken(
+                    sellPath,
+                    overloads,
+                    amounts?.amountIn,
+                    amounts?.amountOutMin
+                  );
+                }
+              }
             }
           }
         }
-        // for (let i = 0; i < tokensToMonitor?.length; i++) {
-        //   let tokenToMonitor = tokensToMonitor[i].toLowerCase();
-        //   //   console.log("TokenToMonitor:", tokenToMonitor);
-
-        //   if (tokenToMonitor.includes(token)) {
-        //     console.log("Found the token ", token);
-        //     //   let path = [config.WETH_ADDRESS, token];
-        //   }
-        // }
       }
     }
   }

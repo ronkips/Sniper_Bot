@@ -12,17 +12,23 @@ const abi = [
   " function approve(address spender, uint value) external returns (bool)"
 ];
 
-export const buyApprove = async (token: string, overloads: Overloads) => {
+export const Approve = async (token: string, overloads: Overloads) => {
   delete overloads.value;
   overloads["nonce"]! += 1;
 
   try {
     let contract = new ethers.Contract(token, abi, account);
-    let tx = await contract.approve(config.UNISWAP_ROUTER, MAX_INT, overloads);
+    let tx = await contract.approve(
+      config.UNISWAP_ROUTER,
+      MAX_INT,
+      overloads
+    );
 
     console.log(`#####buyApprove Successfully#####`);
     console.log(`Transaction Hash:`, tx.hash);
     console.log(`####################`);
+
+    return { success: true, data: tx.hash };
   } catch (error) {
     console.log("There was an error approving the token", error);
   }

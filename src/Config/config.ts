@@ -11,6 +11,9 @@ export const buyAmount = 0.000001;
 export const walletAddress = ethers.utils.getAddress(process.env.WALLET_ADDRESS!);
 export const wssProvider = new ethers.providers.WebSocketProvider(WSS_URL);
 
+export const SLIPPAGE = 50;
+
+
 export const config = {
   // provider: wssProvider,
   UNISWAP_ROUTER: "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D".toLowerCase(),
