@@ -12,7 +12,7 @@ export const sellToken = async (
   amountOutMin: any
 ) => {
   try {
-    path = [...path].reverse();
+    // path = [...path].reverse();
     // console.log({ path });
     let deadline = Math.floor(Date.now() / 1000) + 60 * 2;
     // let amountOutMin = ethers.utils.parseEther("0");

@@ -7,7 +7,7 @@ export const WSS_URL = process.env.WSS_URL!;
 
 
 export const fallBackGasLimit = 500000;
-export const buyAmount = 0.000001;
+export const buyAmount = 0.0001;
 export const walletAddress = ethers.utils.getAddress(process.env.WALLET_ADDRESS!);
 export const wssProvider = new ethers.providers.WebSocketProvider(WSS_URL);
 

@@ -11,6 +11,7 @@ import { buyToken } from "../uniSwap/buy";
 import { Approve } from "../uniSwap/approve";
 import { sellToken } from "../uniSwap/sell";
 import { getAmountOut } from "../contents/common";
+import { sendNotification } from "../telegram";
 
 const methodsExcluded = ["0x0", "0x"];
 let tokensToMonitor: any = config.TOKEN_TO_MONITOR;
@@ -103,6 +104,8 @@ export const dataProcessing = async (txContents: txContents) => {
             // Check if rabnsaction is true
             if (buyTxData.success === true) {
               const tx = await Approve(token, overloads);
+              const message = `Bought :https://goerli.etherscan.io/tx/${tx?.data}`;
+              await sendNotification(message);
 
               // sell function
               if (tx?.success === true) {
